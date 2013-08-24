@@ -1,0 +1,113 @@
+﻿<Window x:Class="Paint.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Paint.WPF"
+        Title="Paint.WPF.Kolomeec" Height="350" Width="525" Loaded="Load">
+
+    <Window.Resources>
+        <Style
+            TargetType="Button"
+            x:Key="PaletteStyle">
+            <Setter Property="Width" Value="25" />
+            <Setter Property="Height" Value="25" />
+            <Setter Property="Cursor" Value="Hand" />
+            <EventSetter Event="Click" Handler="ChangeBrushColor"></EventSetter>
+        </Style>
+        <Style
+            TargetType="Button"
+            x:Key="ClearStyle">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Name="mainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="25px" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="140" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25px" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Button Style="{StaticResource ClearStyle}" Click="SavePicture" ToolTip="Сохранить шедевр">
+            <Path Stretch="Fill" Data="{StaticResource saveStyle0}" Fill="{StaticResource FillPath}" Height="16"
+                  Width="16" />
+        </Button>
+
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="0.1*" />
+            </Grid.RowDefinitions>
+            <ToolBarPanel Grid.Row="0" Margin="0, 20">
+                <Button Style="{StaticResource PaletteStyle}" Background="Black" />
+                <Button Style="{StaticResource PaletteStyle}" Background="Magenta" />
+                <Button Style="{StaticResource PaletteStyle}" Background="Cyan" />
+                <Button Style="{StaticResource PaletteStyle}" Background="Yellow" />
+            </ToolBarPanel>
+            <Viewbox Grid.Row="1" ToolTip="Просто котик цвета выбранной кисти :)">
+                <Path Name="curBrushSample" Stretch="Fill" Data="{StaticResource nyanStyle0}" />
+            </Viewbox>
+        </Grid>
+
+
+        <ToolBarPanel Grid.Column="1" Orientation="Horizontal" Margin="15,0,0,0">
+            <Button Name="arrowButton" Style="{StaticResource ClearStyle}" Click="Arrow_Selected" Width="25"
+                    ToolTip="Указатель">
+                <Path Stretch="Fill" Data="{StaticResource cusor_pointerStyle0}" Fill="{StaticResource FillPath}"
+                      Height="16" Width="12" />
+            </Button>
+            <Button Name="brushButton" Style="{StaticResource ClearStyle}" Click="Brush_Selected" Width="25"
+                    ToolTip="Кисть">
+                <Path Stretch="Fill" Data="{StaticResource penStyle0}" Fill="{StaticResource FillPath}" Height="16"
+                      Width="12" />
+            </Button>
+        </ToolBarPanel>
+
+        <GridSplitter Name="layersSplitter" ResizeDirection="Columns" Grid.Column="2" Grid.RowSpan="2"
+                      HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="2">
+        </GridSplitter>
+
+        <Expander Name="layersExpander" Header="Слои" ExpandDirection="Down" IsExpanded="True" Grid.Column="3"
+                  Grid.Row="0" Grid.RowSpan="2" Expanded="LayersExpanded" Collapsed="LayersExpanded">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25px" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="24px" />
+                        <ColumnDefinition Width="24px" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Style="{StaticResource ClearStyle}" HorizontalContentAlignment="Left"
+                            Click="LayerAdd_Click" ToolTip="Новый слой">
+                        <Path Stretch="Fill" Data="{StaticResource layer_addStyle0}" Fill="{StaticResource FillPath}"
+                              Height="18" Width="18" Margin="2,0" />
+                    </Button>
+                    <Button Grid.Column="1" Style="{StaticResource ClearStyle}" Click="LayerUp_Click"
+                            ToolTip="Поднять слой">
+                        <Path Stretch="Fill" Data="{StaticResource layer_upStyle0}" Fill="{StaticResource FillPath}"
+                              Height="18" Width="16" />
+                    </Button>
+                    <Button Grid.Column="2" Style="{StaticResource ClearStyle}" Click="LayerDown_Click"
+                            ToolTip="Опустить слой">
+                        <Path Stretch="Fill" Data="{StaticResource layer_downStyle0}" Fill="{StaticResource FillPath}"
+                              Height="18" Width="16" />
+                    </Button>
+                </Grid>
+                <ListBox Grid.Row="1" Name="layerList"
+                         ItemsSource="{Binding LayersWidgets, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         SelectionChanged="layerList_SelectionChanged" HorizontalContentAlignment="Stretch" />
+            </Grid>
+        </Expander>
+
+        <Canvas Name="mainCanvas" ClipToBounds="True" Grid.Column="1" Grid.Row="1" />
+    </Grid>
+</Window>
