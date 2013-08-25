@@ -1,8 +1,6 @@
 ﻿using Paint.WPF.Tools;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,7 +20,7 @@ namespace Paint.WPF.Controls
         public event EventHandler<CheckedEventArgs> CheckedChanged;
         public class CheckedEventArgs : EventArgs
         {
-            public bool isChecked { get; set; }
+            public bool IsChecked { get; set; }
         }
 
         private string _layerName;
@@ -43,7 +41,7 @@ namespace Paint.WPF.Controls
         public bool LayerFocus { get; set; }
         internal LayerWidget Widget { get; set; }
 
-        private Point clickPosition;
+        private Point _clickPosition;
         #endregion
 
         /// <summary>
@@ -54,14 +52,14 @@ namespace Paint.WPF.Controls
             InitializeComponent();
             LayerIndex = GlobalState.LayersCount++;
             // Устанавливаем самый большой индекс, для отображения поверх всех существующих слоев
-            Canvas.SetZIndex(this, LayerIndex);
+            Panel.SetZIndex(this, LayerIndex);
 
             Widget = new LayerWidget(this);
             LayerName = String.Format("{0}_{1}", "NewLayer", GlobalState.LayersIndexes + 1);
 
-            Widget.widgetCheckBox.Checked += SetLayerVisibility;
-            Widget.widgetCheckBox.Unchecked += SetLayerVisibility;
-            Widget.widgetDel.Click += Del;
+            Widget.WidgetCheckBox.Checked += SetLayerVisibility;
+            Widget.WidgetCheckBox.Unchecked += SetLayerVisibility;
+            Widget.WidgetDel.Click += Del;
 
         }
 
@@ -72,15 +70,15 @@ namespace Paint.WPF.Controls
         /// <param name="e"></param>
         private void SetLayerVisibility(Object sender, EventArgs e)
         {
-            switch (Widget.widgetCheckBox.IsChecked)
+            switch (Widget.WidgetCheckBox.IsChecked)
             {
                 case true:
-                    this.Visibility = Visibility.Visible;
-                    CheckedChanged(this, new CheckedEventArgs { isChecked = true });
+                    Visibility = Visibility.Visible;
+                    CheckedChanged(this, new CheckedEventArgs { IsChecked = true });
                     break;
                 case false:
-                    this.Visibility = Visibility.Hidden;
-                    CheckedChanged(this, new CheckedEventArgs { isChecked = false });
+                    Visibility = Visibility.Hidden;
+                    CheckedChanged(this, new CheckedEventArgs { IsChecked = false });
                     break;
             }
 
@@ -103,7 +101,7 @@ namespace Paint.WPF.Controls
             {
                 GlobalState.PressLeftButton = true;
                 var draggableControl = (UserControl)sender;
-                clickPosition = e.GetPosition(this);
+                _clickPosition = e.GetPosition(this);
                 draggableControl.CaptureMouse();
             }
         }
@@ -136,7 +134,7 @@ namespace Paint.WPF.Controls
 
                 if (GlobalState.PressLeftButton && draggableControl != null)
                 {
-                    Point currentPosition = e.GetPosition((UIElement)this.Parent);
+                    Point currentPosition = e.GetPosition((UIElement)Parent);
 
                     var transform = draggableControl.RenderTransform as TranslateTransform;
                     if (transform == null)
@@ -145,8 +143,8 @@ namespace Paint.WPF.Controls
                         draggableControl.RenderTransform = transform;
                     }
 
-                    transform.X = currentPosition.X - clickPosition.X;
-                    transform.Y = currentPosition.Y - clickPosition.Y;
+                    transform.X = currentPosition.X - _clickPosition.X;
+                    transform.Y = currentPosition.Y - _clickPosition.Y;
                 }
             }
         }
@@ -158,8 +156,8 @@ namespace Paint.WPF.Controls
         /// <param name="e"></param>
         private void UserControl_GotFocus(object sender, RoutedEventArgs e)
         {
-            visualHost.IsFocused = true;
-            visualHost.FocusSpace();
+            VisualHost.IsFocused = true;
+            VisualHost.FocusSpace();
         }
 
         /// <summary>
@@ -169,8 +167,8 @@ namespace Paint.WPF.Controls
         /// <param name="e"></param>
         public void NonFocus(object sender, RoutedEventArgs e)
         {
-            visualHost.IsFocused = false;
-            visualHost.UnFocusSpace();
+            VisualHost.IsFocused = false;
+            VisualHost.UnFocusSpace();
         }
 
         #region Реализация интерфейса INotifyPropertyChanged

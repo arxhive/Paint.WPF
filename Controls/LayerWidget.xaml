@@ -1,36 +1,48 @@
 ﻿<UserControl x:Class="Paint.WPF.Controls.LayerWidget"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Paint.WPF.Controls"
-             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
              d:DesignHeight="20" d:DesignWidth="120" Loaded="UserControl_Loaded">
-    
     <UserControl.Resources>
         <Style
             TargetType="Button"
             x:Key="PaletteStyle">
-            <Setter Property="Width" Value="25"/>
-            <Setter Property="Height" Value="25"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <EventSetter Event="Click" Handler="ChangeFillColor"></EventSetter>
+            <Setter Property="Width"
+                    Value="25" />
+            <Setter Property="Height"
+                    Value="25" />
+            <Setter Property="Cursor"
+                    Value="Hand" />
+            <EventSetter Event="Click"
+                         Handler="ChangeFillColor" />
         </Style>
         <Style
             TargetType="Button"
             x:Key="ClearStyle">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="BorderThickness"
+                    Value="0" />
         </Style>
         <Style TargetType="CheckBox"
-            x:Key="EyeStyle">
+               x:Key="EyeStyle">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="CheckBox">
-                        <Path Name="TickImage" Stretch="Fill" Data="{StaticResource eye_closeStyle0}" Fill="{StaticResource FillPath}" Height="12" Width="12" />
+                        <Path Name="TickImage"
+                              Stretch="Fill"
+                              Data="{StaticResource EyeCloseIcon}"
+                              Fill="{StaticResource BlueIconBrush}"
+                              Height="12"
+                              Width="12" />
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="TickImage" Property="Data" Value="{StaticResource eye_checkStyle0}" />
+                            <Trigger Property="IsChecked"
+                                     Value="True">
+                                <Setter TargetName="TickImage"
+                                        Property="Data"
+                                        Value="{StaticResource EyeCheckIcon}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -38,46 +50,118 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    
+
     <Grid MouseRightButtonDown="Grid_MouseRightButtonDown">
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Name="contextRow" Height="0"/>
+            <RowDefinition />
+            <RowDefinition Name="ContextRow" Height="0"
+                           x:FieldModifier="private" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20px"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="20px"/>
+            <ColumnDefinition Width="20px" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="20px" />
         </Grid.ColumnDefinitions>
 
-        <CheckBox Name="widgetCheckBox" Style="{StaticResource EyeStyle}" Grid.Row="0" Grid.Column="0" Content="CheckBox"  HorizontalAlignment="Left" Margin="2" VerticalAlignment="Center" IsChecked="True" ToolTip="Изменить видимость" Cursor="Hand" />
-        <Label Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" HorizontalContentAlignment="Left" MouseDoubleClick="Label_MouseDoubleClick">
-            <TextBlock Name="widgetText" Text="{Binding Path=LayerName, Mode=TwoWay}" FontSize="8"  HorizontalAlignment="Left" Background="Transparent" Visibility="Visible" />
+        <CheckBox Name="WidgetCheckBox"
+                  Style="{StaticResource EyeStyle}"
+                  Grid.Row="0"
+                  Grid.Column="0"
+                  Content="CheckBox"
+                  HorizontalAlignment="Left"
+                  Margin="2"
+                  VerticalAlignment="Center"
+                  IsChecked="True"
+                  ToolTip="Изменить видимость"
+                  Cursor="Hand" />
+        <Label Grid.Row="0"
+               Grid.Column="1"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Left"
+               HorizontalContentAlignment="Left"
+               MouseDoubleClick="Label_MouseDoubleClick">
+            <TextBlock Name="WidgetText"
+                       Text="{Binding Path=LayerName, Mode=TwoWay}"
+                       FontSize="8"
+                       HorizontalAlignment="Left"
+                       Background="Transparent"
+                       Visibility="Visible"
+                       x:FieldModifier="private" />
         </Label>
-        <TextBox Name="editBox" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" HorizontalContentAlignment="Left" FontSize="8"  Background="Transparent" BorderThickness="0.5" KeyUp="editBox_KeyUp" Visibility="Hidden"/>
-        <Button  Name="widgetDel" Style="{StaticResource ClearStyle}" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" ToolTip="Удалить слой">
-            <Path Stretch="Fill" Data="{StaticResource closeStyle0}" Fill="{StaticResource FillPath}" Height="12" Width="12" />
+        <TextBox Name="EditBox"
+                 Grid.Row="0"
+                 Grid.Column="1"
+                 VerticalAlignment="Center"
+                 HorizontalAlignment="Left"
+                 HorizontalContentAlignment="Left"
+                 FontSize="8"
+                 Background="Transparent"
+                 BorderThickness="0.5"
+                 KeyUp="editBox_KeyUp"
+                 Visibility="Hidden"
+                 x:FieldModifier="private" />
+        <Button Name="WidgetDel"
+                Style="{StaticResource ClearStyle}"
+                Grid.Row="0"
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                ToolTip="Удалить слой"
+                x:FieldModifier="public">
+            <Path Stretch="Fill"
+                  Data="{StaticResource CloseButtonIcon}"
+                  Fill="{StaticResource BlueIconBrush}"
+                  Height="12"
+                  Width="12" />
         </Button>
 
-        <StackPanel Name="contextPanel" Grid.Row="1" Grid.ColumnSpan="3" Visibility="Hidden">
+        <StackPanel Name="ContextPanel"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="3"
+                    Visibility="Hidden"
+                    x:FieldModifier="private">
 
-            <GroupBox Header="Прозрачность" FontSize="10">
-                <Slider Name="opacitySlider" Width="100" Minimum="0" Maximum="1" Margin="2" Value="{Binding Opacity, Mode=TwoWay}"/>
+            <GroupBox Header="Прозрачность"
+                      FontSize="10">
+                <Slider Name="OpacitySlider"
+                        Width="100"
+                        Minimum="0"
+                        Maximum="1"
+                        Margin="2"
+                        Value="{Binding Opacity, Mode=TwoWay}" />
             </GroupBox>
-            <GroupBox Header="Фон" FontSize="10">
-                <StackPanel Orientation="Horizontal" Width="100">
-                    <Button Style="{StaticResource PaletteStyle}" Background="Transparent" Content="/" Foreground="#FFFF0606" FontSize="14" />
-                    <Button Style="{StaticResource PaletteStyle}" Background="White"/>
-                    <Button Style="{StaticResource PaletteStyle}" Background="LightGray"/>
-                    <Button Style="{StaticResource PaletteStyle}" Background="LightSkyBlue"/>
+            <GroupBox Header="Фон"
+                      FontSize="10">
+                <StackPanel Orientation="Horizontal"
+                            Width="100">
+                    <Button Style="{StaticResource PaletteStyle}"
+                            Background="Transparent"
+                            Content="/"
+                            Foreground="#FFFF0606"
+                            FontSize="14" />
+                    <Button Style="{StaticResource PaletteStyle}"
+                            Background="White" />
+                    <Button Style="{StaticResource PaletteStyle}"
+                            Background="LightGray" />
+                    <Button Style="{StaticResource PaletteStyle}"
+                            Background="LightSkyBlue" />
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Размер холста" FontSize="10">
-                <StackPanel Orientation="Horizontal" Width="100">
+            <GroupBox Header="Размер холста"
+                      FontSize="10">
+                <StackPanel Orientation="Horizontal"
+                            Width="100">
                     <TextBlock Margin="2">x:</TextBlock>
-                    <TextBox Name="xSize" Width="40" Margin="2" TextChanged="SizeChanged"></TextBox>
+                    <TextBox Name="XSize"
+                             Width="40"
+                             Margin="2"
+                             TextChanged="SizeChanged"
+                             x:FieldModifier="private" />
                     <TextBlock Margin="2">y:</TextBlock>
-                    <TextBox Name="ySize" Width="40" Margin="2" TextChanged="SizeChanged"></TextBox>
+                    <TextBox Name="YSize"
+                             Width="40"
+                             Margin="2"
+                             TextChanged="SizeChanged"
+                             x:FieldModifier="private" />
                 </StackPanel>
             </GroupBox>
         </StackPanel>

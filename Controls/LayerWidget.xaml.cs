@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Paint.WPF.Controls
 {
@@ -24,7 +12,7 @@ namespace Paint.WPF.Controls
         /// <summary>
         /// Ссылка на экземпляр родительского слоя
         /// </summary>
-        public LayerControl ThisLayer;
+        public readonly LayerControl ThisLayer;
 
         /// <summary>
         /// Конструктор
@@ -33,15 +21,15 @@ namespace Paint.WPF.Controls
         public LayerWidget(LayerControl layerControl)
         {
             ThisLayer = layerControl;
-            this.DataContext = ThisLayer;
+            DataContext = ThisLayer;
 
             InitializeComponent();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            xSize.Text = ThisLayer.visualHost.SpaceSize.Width.ToString();
-            ySize.Text = ThisLayer.visualHost.SpaceSize.Height.ToString();
+            XSize.Text = ThisLayer.VisualHost.SpaceSize.Width.ToString();
+            YSize.Text = ThisLayer.VisualHost.SpaceSize.Height.ToString();
         }
 
         /// <summary>
@@ -51,15 +39,15 @@ namespace Paint.WPF.Controls
         /// <param name="e"></param>
         private void Grid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (contextPanel.Visibility == Visibility.Hidden)
+            if (ContextPanel.Visibility == Visibility.Hidden)
             {
-                contextPanel.Visibility = Visibility.Visible;
-                contextRow.Height = new GridLength(130);
+                ContextPanel.Visibility = Visibility.Visible;
+                ContextRow.Height = new GridLength(130);
             }
-            else if (contextPanel.Visibility == Visibility.Visible)
+            else if (ContextPanel.Visibility == Visibility.Visible)
             {
-                contextPanel.Visibility = Visibility.Hidden;
-                contextRow.Height = new GridLength(0);
+                ContextPanel.Visibility = Visibility.Hidden;
+                ContextRow.Height = new GridLength(0);
             }
         }
 
@@ -70,11 +58,11 @@ namespace Paint.WPF.Controls
         /// <param name="e"></param>
         private void Label_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            editBox.Text = widgetText.Text;
-            widgetText.Visibility = Visibility.Hidden;
-            editBox.Visibility = Visibility.Visible;
-            editBox.Focus();
-            editBox.SelectAll();
+            EditBox.Text = WidgetText.Text;
+            WidgetText.Visibility = Visibility.Hidden;
+            EditBox.Visibility = Visibility.Visible;
+            EditBox.Focus();
+            EditBox.SelectAll();
         }
 
         /// <summary>
@@ -86,9 +74,9 @@ namespace Paint.WPF.Controls
         {
             if (e.Key == Key.Enter)
             {
-                widgetText.Text = editBox.Text;
-                editBox.Visibility = Visibility.Hidden;
-                widgetText.Visibility = Visibility.Visible;
+                WidgetText.Text = EditBox.Text;
+                EditBox.Visibility = Visibility.Hidden;
+                WidgetText.Visibility = Visibility.Visible;
             }
         }
 
@@ -99,7 +87,7 @@ namespace Paint.WPF.Controls
         /// <param name="e"></param>
         private void ChangeFillColor(object sender, RoutedEventArgs e)
         {
-            ThisLayer.visualHost.ChangeFill(((Button)sender).Background);
+            ThisLayer.VisualHost.ChangeFill(((Button)sender).Background);
         }
 
         /// <summary>
@@ -109,13 +97,12 @@ namespace Paint.WPF.Controls
         /// <param name="e"></param>
         private void SizeChanged(object sender, TextChangedEventArgs e)
         {
-            if (xSize.Text != "" && ySize.Text != "")
+            if (XSize.Text != "" && YSize.Text != "")
             {
-                double x = 0,
-                    y = 0;
-                if (double.TryParse(xSize.Text, out x) && double.TryParse(ySize.Text, out y))
+                double x, y;
+                if (double.TryParse(XSize.Text, out x) && double.TryParse(YSize.Text, out y))
                     if (x > 0 && y > 0)
-                        ThisLayer.visualHost.ChangeSize(new Size(x, y));
+                        ThisLayer.VisualHost.ChangeSize(new Size(x, y));
             }
         }
 
