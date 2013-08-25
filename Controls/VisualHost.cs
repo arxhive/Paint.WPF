@@ -23,9 +23,6 @@ namespace Paint.WPF.Controls
         private Point Position { get; set; }
         public Size SpaceSize { get; private set; }
 
-        /// <summary>
-        /// Конструктор
-        /// </summary>
         public VisualHost()
         {
             _visuals = new VisualCollection(this);
